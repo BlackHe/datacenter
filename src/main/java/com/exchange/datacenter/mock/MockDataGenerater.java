@@ -7,14 +7,22 @@ import java.util.List;
 
 public class MockDataGenerater {
 
-    public static <T> List generateMockData(T t){
-        String className = t.getClass().getSimpleName();
-        t.getClass();
-        switch (className){
+    public static List generateMockData(Class clazz) {
+        switch (clazz.getSimpleName()) {
             case "Assert":
                 return assertList();
+            case "Trade":
+                return tradeList();
             case "Settlement":
                 return settlementList();
+            case "Activity":
+                return activityList();
+            case "CompanyInput":
+                return companyInputList();
+            case "BlockchainFee":
+                return blockchainFeeList();
+            case "AbnormalTurnedhot":
+                return abnormalTurnedhotList();
             default:
                 return null;
         }
@@ -68,8 +76,6 @@ public class MockDataGenerater {
         activities.add(new Activity().setCoinName("USDT").setTradingDate("2020-01-02 11:00:00").setAmount("44233.34263").setClientId("0000000022").setDirection("0").setId("928234382693923"));
         return activities;
     }
-
-
 
 
     public static List<CompanyInput> companyInputList() {

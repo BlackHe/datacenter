@@ -1,18 +1,14 @@
-package com.exchange.datacenter.configuration;
+package com.exchange.datacenter.properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ApiProperties {
+public class PropertiesHolder {
 
-//    @Value("${data.mock.flag}")
-    private String dataMockFlag = "true";
+    @Value("${data.mock.flag}")
+    private volatile String dataMockFlag;
 
-
-    public boolean isDataMockFlag() {
-        return Boolean.valueOf(dataMockFlag);
-    }
 
     public String getDataMockFlag() {
         return dataMockFlag;

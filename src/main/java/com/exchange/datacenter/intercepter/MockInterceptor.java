@@ -1,7 +1,12 @@
 package com.exchange.datacenter.intercepter;
 
+import com.exchange.datacenter.bean.BaseResponse;
+import com.exchange.datacenter.configuration.MockFlagConfiguration;
 import com.exchange.datacenter.mock.Mock;
 import com.exchange.datacenter.mock.MockDataGenerater;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -9,28 +14,34 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.List;
 
 @Component
 public class MockInterceptor implements HandlerInterceptor {
+
+
+    @Autowired
+    private MockFlagConfiguration mockFlagConfiguration;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("==preHandle===");
         if (!(handler instanceof HandlerMethod)){
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        boolean needMock = method.isAnnotationPresent(Mock.class);
-        if (!needMock){
+        if (!needMock(method)){
+            System.out.println("return real data");
             return true;
         }
-        Mock mock = method.getAnnotation(Mock.class);
-        Class type = mock.type();
+        Class type = method.getAnnotation(Mock.class).type();
         List list = MockDataGenerater.generateMockData(type);
-        System.out.println("mock data size = "+list.size());
+        System.out.println("return mock data, size = " + (list == null ? 0 : list.size()));
+        final PrintWriter writer = response.getWriter();
+        writer.print(buildMockResponse(list));
+        writer.close();
         return false;
     }
 
@@ -42,5 +53,26 @@ public class MockInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
+    }
+
+    /**
+     * 判断是否走mock
+     * @param method
+     * @return
+     */
+    private boolean needMock(Method method){
+        return mockFlagConfiguration.isMock() && method.isAnnotationPresent(Mock.class);
+    }
+
+    private String buildMockResponse(List list){
+        BaseResponse response = BaseResponse.responseOf(list);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = "";
+        try {
+            result = objectMapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

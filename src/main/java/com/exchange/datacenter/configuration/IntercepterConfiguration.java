@@ -14,7 +14,7 @@ public class IntercepterConfiguration extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(mockInterceptor);
+        registry.addInterceptor(mockInterceptor);
         super.addInterceptors(registry);
     }
 }
