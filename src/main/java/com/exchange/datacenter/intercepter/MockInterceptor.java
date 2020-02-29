@@ -55,11 +55,6 @@ public class MockInterceptor implements HandlerInterceptor {
 
     }
 
-    /**
-     * 判断是否走mock
-     * @param method
-     * @return
-     */
     private boolean needMock(Method method){
         return mockFlagConfiguration.isMock() && method.isAnnotationPresent(Mock.class);
     }

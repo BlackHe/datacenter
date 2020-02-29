@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AssertController{
 
     @RequestMapping("")
+    @Mock(type = Assert.class)
     public BaseResponse getAssert(@RequestParam String coinName, @RequestParam String clientId) {
         System.out.println("======返回真实数据======");
         return BaseResponse.responseOf(MockDataGenerater.assertList());
