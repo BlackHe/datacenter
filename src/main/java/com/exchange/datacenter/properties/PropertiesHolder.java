@@ -6,15 +6,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PropertiesHolder {
 
-    @Value("${data.mock.flag}")
-    private volatile String dataMockFlag;
+    @Value("${mock.enabled}")
+    private volatile String enableMock;
 
-
-    public String getDataMockFlag() {
-        return dataMockFlag;
+    public String getEnableMock() {
+        Runnable runnable = () -> { System.out.println("1212");};
+        return enableMock;
     }
 
-    public void setDataMockFlag(String dataMockFlag) {
-        this.dataMockFlag = dataMockFlag;
+    public void setEnableMock(String enableMock) {
+        this.enableMock = enableMock;
     }
 }

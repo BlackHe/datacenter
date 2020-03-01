@@ -11,14 +11,14 @@ public class MockFlagConfiguration {
     private PropertiesHolder propertiesHolder;
 
     public boolean isMock(){
-        return Boolean.valueOf(propertiesHolder.getDataMockFlag());
+        return Boolean.valueOf(propertiesHolder.getEnableMock());
     }
 
     public void open(){
-        propertiesHolder.setDataMockFlag("true");
+        propertiesHolder.setEnableMock("true");
     }
 
     public void close(){
-        propertiesHolder.setDataMockFlag("false");
+        propertiesHolder.setEnableMock("false");
     }
 }
